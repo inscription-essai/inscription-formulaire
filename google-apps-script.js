@@ -1,4 +1,16 @@
-// Gestion des requêtes OPTIONS (CORS)
+// ====================================================================
+// GOOGLE APPS SCRIPT - À copier dans Google Apps Script Editor
+// ====================================================================
+
+// CONFIGURATION - À MODIFIER
+const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID'; // ID de votre Google Sheet
+const SHEET_NAME = 'Réponses'; // Nom de la feuille (onglet)
+const adminEmail = 'marie@email.fr'; // À REMPLACER par votre email
+
+// ====================================================================
+// GESTION DES REQUÊTES CORS
+// ====================================================================
+
 function doOptions(e) {
   const output = ContentService.createTextOutput('OK');
   output.setMimeType(ContentService.MimeType.TEXT);
@@ -10,59 +22,12 @@ function doOptions(e) {
   
   return output;
 }
+
 // ====================================================================
-// GOOGLE APPS SCRIPT - À copier dans Google Apps Script Editor
-// ====================================================================
-// 
-// ÉTAPES :
-// 1. Aller sur : https://script.google.com/home
-// 2. Cliquer sur "Nouveau projet"
-// 3. Copier le code ci-dessous
-// 4. Créer une nouvelle feuille Google Sheets avec les colonnes :
-//    - Timestamp (Horodatage)
-//    - Nom
-//    - Prénom
-//    - Email
-//    - Mot de passe (optionnel, recommandé de ne pas stocker)
-// 5. Remplacer SHEET_ID et SHEET_NAME
-// 6. Publier le script (Déployer -> Nouveau déploiement -> Type: API Web)
-// 7. Copier l'URL de déploiement dans script.js (GOOGLE_APPS_SCRIPT_URL)
-//
+// FONCTION PRINCIPALE - RECEVOIR LES DONNÉES
 // ====================================================================
 
-// CONFIGURATION - À MODIFIER
-const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID'; // ID de votre Google Sheet
-const SHEET_NAME = 'Réponses'; // Nom de la feuille (onglet)
-
-// Fonction principale pour recevoir les données du formulaire
-// Gérer les requêtes POST avec CORS
-function handleCORS(e) {
-  // Récupérer les paramètres
-  const params = e.parameter;
-  
-  try {
-    // Appeler doPost
-    return doPost(e);
-  } catch (error) {
-    const output = ContentService.createTextOutput(JSON.stringify({
-      success: false,
-      error: error.toString()
-    }));
-    output.setMimeType(ContentService.MimeType.JSON);
-    output.setHeader('Access-Control-Allow-Origin', '*');
-    return output;
-  }
-}
 function doPost(e) {
-  // En-têtes CORS
-  const output = ContentService.createTextOutput(JSON.stringify({
-    success: false,
-    error: 'Erreur'
-  }));
-  output.setHeader('Access-Control-Allow-Origin', '*');
-  output.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  output.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  output.setMimeType(ContentService.MimeType.JSON);
   try {
     // Parser les données JSON
     const data = JSON.parse(e.postData.contents);
@@ -86,24 +51,35 @@ function doPost(e) {
     sendUserConfirmation(data.email, data.prenom);
 
     // Retourner une réponse de succès
-    return ContentService.createTextOutput(JSON.stringify({
+    const output = ContentService.createTextOutput(JSON.stringify({
       status: 'success',
       message: 'Données enregistrées avec succès'
-    })).setMimeType(ContentService.MimeType.JSON);
+    }));
+    output.setMimeType(ContentService.MimeType.JSON);
+    output.setHeader('Access-Control-Allow-Origin', '*');
+    output.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    output.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
+    return output;
 
   } catch (error) {
     // Retourner une réponse d'erreur
-    return ContentService.createTextOutput(JSON.stringify({
+    const output = ContentService.createTextOutput(JSON.stringify({
       status: 'error',
       message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
+    }));
+    output.setMimeType(ContentService.MimeType.JSON);
+    output.setHeader('Access-Control-Allow-Origin', '*');
+    
+    return output;
   }
 }
 
-// Fonction pour envoyer un email à l'administrateur
-function sendAdminNotification(data) {
-  const adminEmail = 'marie@email.fr'; // À REMPLACER par votre email
+// ====================================================================
+// FONCTION - EMAIL À L'ADMINISTRATEUR
+// ====================================================================
 
+function sendAdminNotification(data) {
   const subject = `📝 Nouvelle inscription - ${data.prenom} ${data.nom}`;
 
   const message = `
@@ -125,7 +101,10 @@ function sendAdminNotification(data) {
   }
 }
 
-// Fonction pour envoyer un email de confirmation à l'utilisateur
+// ====================================================================
+// FONCTION - EMAIL À L'UTILISATEUR
+// ====================================================================
+
 function sendUserConfirmation(email, prenom) {
   const subject = '✓ Inscription confirmée';
 
@@ -146,7 +125,10 @@ function sendUserConfirmation(email, prenom) {
   }
 }
 
-// Fonction pour tester localement (optionnel)
+// ====================================================================
+// FONCTION DE TEST
+// ====================================================================
+
 function testPost() {
   const testData = {
     nom: 'Dupont',

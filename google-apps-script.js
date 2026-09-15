@@ -1,3 +1,15 @@
+// Gestion des requêtes OPTIONS (CORS)
+function doOptions(e) {
+  const output = ContentService.createTextOutput('OK');
+  output.setMimeType(ContentService.MimeType.TEXT);
+  
+  // En-têtes CORS
+  output.setHeader('Access-Control-Allow-Origin', '*');
+  output.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  output.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  
+  return output;
+}
 // ====================================================================
 // GOOGLE APPS SCRIPT - À copier dans Google Apps Script Editor
 // ====================================================================
@@ -23,7 +35,34 @@ const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID'; // ID de votre Google Sheet
 const SHEET_NAME = 'Réponses'; // Nom de la feuille (onglet)
 
 // Fonction principale pour recevoir les données du formulaire
+// Gérer les requêtes POST avec CORS
+function handleCORS(e) {
+  // Récupérer les paramètres
+  const params = e.parameter;
+  
+  try {
+    // Appeler doPost
+    return doPost(e);
+  } catch (error) {
+    const output = ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: error.toString()
+    }));
+    output.setMimeType(ContentService.MimeType.JSON);
+    output.setHeader('Access-Control-Allow-Origin', '*');
+    return output;
+  }
+}
 function doPost(e) {
+  // En-têtes CORS
+  const output = ContentService.createTextOutput(JSON.stringify({
+    success: false,
+    error: 'Erreur'
+  }));
+  output.setHeader('Access-Control-Allow-Origin', '*');
+  output.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  output.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  output.setMimeType(ContentService.MimeType.JSON);
   try {
     // Parser les données JSON
     const data = JSON.parse(e.postData.contents);

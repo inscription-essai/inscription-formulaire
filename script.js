@@ -148,19 +148,24 @@ function updatePasswordStrength() {
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Validation complète
     let isValid = true;
+
     Object.keys(inputs).forEach(key => {
         if (key !== 'terms') {
-            if (!validateField(key)) isValid = false;
+            if (!validateField(key)) {
+                isValid = false;
+            }
         }
     });
 
-    if (!validateCheckbox()) isValid = false;
+    if (!validateCheckbox()) {
+        isValid = false;
+    }
 
-    if (!isValid) return;
+    if (!isValid) {
+        return;
+    }
 
-    // Préparer les données
     const formData = {
         nom: inputs.nom.value.trim(),
         prenom: inputs.prenom.value.trim(),
@@ -169,39 +174,38 @@ form.addEventListener('submit', async (e) => {
         timestamp: new Date().toLocaleString('fr-FR')
     };
 
-    // Afficher le spinner
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
     formMessage.classList.remove('success', 'error');
     formMessage.textContent = '';
 
-try {
-    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify(formData)
-    });
+    try {
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: JSON.stringify(formData)
+        });
 
-    const result = await response.json();
+        const result = await response.json();
 
-    if (result.status === 'success') {
-        showSuccessMessage('✓ Inscription réussie ! Vérifiez votre email.');
-        form.reset();
-        passwordStrength.classList.remove('weak', 'medium', 'strong');
-    } else {
-        throw new Error(result.message);
+        if (result.status === 'success') {
+            showSuccessMessage('✓ Inscription réussie ! Vérifiez votre email.');
+            form.reset();
+            passwordStrength.classList.remove('weak', 'medium', 'strong');
+        } else {
+            throw new Error(result.message || 'Erreur lors de l’inscription');
+        }
+
+    } catch (error) {
+        showErrorMessage('✕ ' + error.message);
+        console.error('Erreur:', error);
+
+    } finally {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
     }
-
-} catch (error) {
-    showErrorMessage('✕ ' + error.message);
-    console.error('Erreur:', error);
-
-} finally {
-    submitBtn.classList.remove('loading');
-    submitBtn.disabled = false;
-}
 });
 
 function showSuccessMessage(message) {

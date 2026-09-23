@@ -175,24 +175,27 @@ form.addEventListener('submit', async (e) => {
 
     try {
         // Envoyer à Google Apps Script
-        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify(formData),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+});
 
-        if (response.ok) {
-            showSuccessMessage('✓ Inscription réussie! Vérifiez votre email.');
-            form.reset();
-            passwordStrength.classList.remove('weak', 'medium', 'strong');
-        } else {
-            throw new Error('Erreur lors de l\'inscription');
+const result = await response.json();
+
+if (result.status === 'success') {
+    showSuccessMessage('✓ Inscription réussie ! Vérifiez votre email.');
+    form.reset();
+    passwordStrength.classList.remove('weak', 'medium', 'strong');
+} else {
+    throw new Error(result.message);
+}
         }
     } catch (error) {
-        showErrorMessage('✕ Une erreur est survenue. Veuillez réessayer.');
-        console.error('Erreur:', error);
+        showErrorMessage('✕ ' + error.message);
+console.error(error);
     } finally {
         submitBtn.classList.remove('loading');
         submitBtn.disabled = false;

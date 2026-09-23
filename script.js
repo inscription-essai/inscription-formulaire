@@ -175,33 +175,33 @@ form.addEventListener('submit', async (e) => {
     formMessage.classList.remove('success', 'error');
     formMessage.textContent = '';
 
-    try {
-        // Envoyer à Google Apps Script
-const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData)
-});
+try {
+    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(formData)
+    });
 
-const result = await response.json();
+    const result = await response.json();
 
-if (result.status === 'success') {
-    showSuccessMessage('✓ Inscription réussie ! Vérifiez votre email.');
-    form.reset();
-    passwordStrength.classList.remove('weak', 'medium', 'strong');
-} else {
-    throw new Error(result.message);
-}
-        }
-    } catch (error) {
-        showErrorMessage('✕ ' + error.message);
-console.error(error);
-    } finally {
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
+    if (result.status === 'success') {
+        showSuccessMessage('✓ Inscription réussie ! Vérifiez votre email.');
+        form.reset();
+        passwordStrength.classList.remove('weak', 'medium', 'strong');
+    } else {
+        throw new Error(result.message);
     }
+
+} catch (error) {
+    showErrorMessage('✕ ' + error.message);
+    console.error('Erreur:', error);
+
+} finally {
+    submitBtn.classList.remove('loading');
+    submitBtn.disabled = false;
+}
 });
 
 function showSuccessMessage(message) {

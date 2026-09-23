@@ -1,5 +1,5 @@
 // Configuration - À mettre à jour avec votre URL Google Apps Script
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzF3WFNf89rhZdr5gSue4RpIhAC3cz2nwQit1JfUB_kAzHM4lM3eRTFQ53PBRprJVkX/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwv1fPMw3Z5xXX3qIxcvPNXXHiInnnaonnx3V9pf-RXzOFqVMbcqeOmlEb82Pc9AEqm/exec';
 
 // Éléments du formulaire
 const form = document.getElementById('signupForm');

@@ -191,7 +191,7 @@ form.addEventListener('submit', async (e) => {
         const result = await response.json();
 
         if (result.status === 'success') {
-            showSuccessMessage('✓ Inscription réussie ! La mise à niveau sera effective d'ici 2 à 3 jours.');
+            showSuccessMessage('✓ Inscription réussie ! La mise à niveau sera effective d'ici 2 à 3 jours');
             form.reset();
             passwordStrength.classList.remove('weak', 'medium', 'strong');
         } else {

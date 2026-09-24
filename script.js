@@ -1,5 +1,5 @@
 // Configuration - À mettre à jour avec votre URL Google Apps Script
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3KLK91vfBu2rlM2h4b3XtadXeAgfPeZULwsM1q8V1E_6eDTryuNexHf3g4gnt3kYq/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx44wWpA2aPcliDg_68WIKQuTWDCrnNyP3hSyw2AZ4l0G1bkJwHtjCAEgRNWu6c0o0_/exec';
 
 console.log("SCRIPT.JS EST BIEN CHARGÉ");
 

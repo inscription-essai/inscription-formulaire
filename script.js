@@ -191,7 +191,7 @@ form.addEventListener('submit', async (e) => {
         const result = await response.json();
 
         if (result.status === 'success') {
-            showSuccessMessage('✓ Inscription réussie ! La mise à niveau sera effective dans 2 jours');
+            showSuccessMessage('Merci ! Votre demande d’essai gratuit a bien été enregistrée. Elle sera active dans 2jours.');
             form.reset();
             passwordStrength.classList.remove('weak', 'medium', 'strong');
         } else {

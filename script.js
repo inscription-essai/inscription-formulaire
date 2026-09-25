@@ -87,10 +87,6 @@ function validateField(fieldName) {
 
         case 'password':
             if (!value) error = 'Le mot de passe est requis';
-            else if (value.length < 8) error = 'Le mot de passe doit contenir au moins 8 caractères';
-            else if (!/(?=.*[a-z])/.test(value)) error = 'Doit contenir au moins une minuscule';
-            else if (!/(?=.*[A-Z])/.test(value)) error = 'Doit contenir au moins une majuscule';
-            else if (!/(?=.*\d)/.test(value)) error = 'Doit contenir au moins un chiffre';
             break;
 
         case 'confirmPassword':
@@ -130,18 +126,8 @@ function clearError(fieldName) {
 
 // Force du mot de passe
 function updatePasswordStrength() {
-    const password = passwordInput.value;
-    let strength = 0;
-
-    if (password.length >= 8) strength++;
-    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-    if (/\d/.test(password)) strength++;
-    if (/[^a-zA-Z\d]/.test(password)) strength++;
-
+    // Plus d'indicateur de force du mot de passe.
     passwordStrength.classList.remove('weak', 'medium', 'strong');
-    if (strength <= 2) passwordStrength.classList.add('weak');
-    else if (strength <= 3) passwordStrength.classList.add('medium');
-    else passwordStrength.classList.add('strong');
 }
 
 // Soumission du formulaire
